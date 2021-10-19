@@ -4,6 +4,19 @@ const cors = require('cors')
 
 const contactsRouter = require('./routes/api/contacts')
 
+// const mongoose = require('mongoose')
+// const dotenv = require('dotenv')
+// dotenv.config()
+// const { DB_HOST } = process.env
+// const { Schema, model } = mongoose
+
+// const Contact = model("contact", contactSchema)
+
+// mongoose.connect(DB_HOST, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// }).then(() => { console.log('succsess') }).catch(error => { console.log(error.message) })
+
 const app = express()
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
@@ -19,8 +32,8 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
-  const { status=500, message = 'Server error'}=err
-  res.status(status).json({ message  })
+  const { status = 500, message = 'Server error' } = err
+  res.status(status).json({ message })
 })
 
 module.exports = app
