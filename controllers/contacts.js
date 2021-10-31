@@ -4,7 +4,10 @@ const { Contact } = require('../models')
 // const { response } = require('express')
 
 const getAll = async (req, res, next) => {
-  const contacts = await Contact.find({})
+  const { page = 1, limit = 10 } = req.query
+  const skip = (page - 1) * limit
+  const { _id } = req.user
+  const contacts = await Contact.find({ owner: _id }, '_id name phone owner', { skip, limit: +limit }).populate('owner', 'email')
   // const contacts = await contactsOperations.listContacts()
   res.json({
     status: 'success',
@@ -33,7 +36,9 @@ const getById = async (req, res, next) => {
 }
 
 const add = async (req, res) => {
-  const result = await Contact.create(req.body)
+  const newContact = { ...req.body, owner: req.user._id }
+  const result = await Contact.create(newContact)
+  console.log(newContact)
   res.status(201).json({
     status: 'success',
     code: 201,
