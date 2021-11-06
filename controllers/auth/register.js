@@ -1,4 +1,5 @@
 const { Conflict } = require('http-errors')
+const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
 const { User } = require('../../models')
 
@@ -8,8 +9,11 @@ const register = async (req, res) => {
   if (user) {
     throw new Conflict('Already registered')
   }
+
+  const avatarURL = gravatar.url(email)
+
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-  await User.create({ email, password: hashPassword })
+  await User.create({ email, password: hashPassword, avatarURL })
   res.status(201).json({
     status: 'success',
     code: 201,
